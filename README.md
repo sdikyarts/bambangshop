@@ -65,11 +65,11 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [√] Commit: `Implement unsubscribe function in Notification controller.`
     -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
-    -   [ ] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
-    -   [ ] Commit: `Implement notify function in Notification service to notify each Subscriber.`
-    -   [ ] Commit: `Implement publish function in Program service and Program controller.`
-    -   [ ] Commit: `Edit Product service methods to call notify after create/delete.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
+    -   [√] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
+    -   [√] Commit: `Implement notify function in Notification service to notify each Subscriber.`
+    -   [√] Commit: `Implement publish function in Program service and Program controller.`
+    -   [√] Commit: `Edit Product service methods to call notify after create/delete.`
+    -   [√] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -102,3 +102,31 @@ Postman has been invaluable for testing BambangShop's endpoints. Key helpful fea
 - Request chaining: Testing subscriber notification flow end-to-end
 
 #### Reflection Publisher-3
+Based on my implementation experience with BambangShop's notification system, here are my reflections:
+
+1. Push vs Pull Model:
+BambangShop uses the Push model variation of the Observer Pattern. When a product is created/deleted/published, the NotificationService actively pushes the notification data to all subscribed URLs via HTTP POST requests. Subscribers don't need to periodically check for updates - they just need to have an endpoint ready to receive notifications.
+
+2. Using Pull Model Instead:
+Advantages of Pull:
+- Less network overhead if changes are infrequent since subscribers only pull when needed
+- More resilient to subscriber downtime since they control when to get updates
+- Simpler error handling since failed pulls can be retried by subscribers
+
+Disadvantages of Pull:
+- Higher latency since subscribers need to poll periodically
+- More complex subscriber implementation to handle polling logic
+- Increased load on BambangShop server from constant polling
+- Wasted requests when there are no updates to pull
+
+For BambangShop's use case, Push is better since product updates need to be delivered promptly and the subscriber count is likely manageable.
+
+3. Impact Without Multi-threading:
+Without multi-threading in the notification process:
+- Notifications would be sent sequentially to each subscriber
+- Each HTTP request would block until completed
+- A slow/unresponsive subscriber would delay notifications to all other subscribers
+- The product API endpoint would be blocked until all notifications complete
+- Overall system responsiveness would degrade significantly with more subscribers
+
+This is why BambangShop uses async HTTP requests to notify subscribers concurrently, preventing any single slow subscriber from becoming a bottleneck.
