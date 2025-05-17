@@ -23,23 +23,9 @@ As this is an Observer Design Pattern tutorial repository, you need to implement
 This feature will notify creation, promotion, and deletion of a product, to external subscribers that are interested of a certain product type.
 The subscribers are another Rocket instances, so the notification will be sent using HTTP POST request to each subscriber's `receive notification` address.
 
-## API Documentations
-
-You can download the Postman Collection JSON here: https://ristek.link/AdvProgWeek7Postman
-
-After you download the Postman Collection, you can try the endpoints inside "BambangShop Publisher" folder.
-This Postman collection also contains endpoints that you need to implement later on (the `Notification` feature).
-
-Postman is an installable client that you can use to test web endpoints using HTTP request.
-You can also make automated functional testing scripts for REST API projects using this client.
-You can install Postman via this website: https://www.postman.com/downloads/
-
 ## How to Run in Development Environment
 1.  Set up environment variables first by creating `.env` file.
     Here is the example of `.env` file:
-    ```bash
-    APP_INSTANCE_ROOT_URL="http://localhost:8000"
-    ```
     Here are the details of each environment variable:
     | variable              | type   | description                                                |
     |-----------------------|--------|------------------------------------------------------------|
@@ -48,15 +34,15 @@ You can install Postman via this website: https://www.postman.com/downloads/
     (You might want to use `cargo check` if you only need to verify your work without running the app.)
 
 ## Mandatory Checklists (Publisher)
--   [ ] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
+-   [√] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
 -   **STAGE 1: Implement models and repositories**
-    -   [ ] Commit: `Create Subscriber model struct.`
-    -   [ ] Commit: `Create Notification model struct.`
-    -   [ ] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Subscriber repository.`
-    -   [ ] Commit: `Implement list_all function in Subscriber repository.`
-    -   [ ] Commit: `Implement delete function in Subscriber repository.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
+    -   [√] Commit: `Create Subscriber model struct.`
+    -   [√ ] Commit: `Create Notification model struct.`
+    -   [√] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
+    -   [√] Commit: `Implement add function in Subscriber repository.`
+    -   [√] Commit: `Implement list_all function in Subscriber repository.`
+    -   [√] Commit: `Implement delete function in Subscriber repository.`
+    -   [√] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
     -   [ ] Commit: `Implement subscribe function in Notification service.`
@@ -77,6 +63,13 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+Based on my analysis of the BambangShop codebase, here are concise answers to your reflection questions:
+1. Observer Pattern Interface vs Single Model Struct:
+In this BambangShop case, a single Model struct is sufficient. The Subscriber struct already fulfills the observer role without needing an interface/trait. In Rust, the implementation is pragmatic - the observer functionality is achieved through the Subscriber model directly, with notification handling embedded in its methods rather than through an interface abstraction.
+2. Vec vs DashMap for Unique IDs:
+DashMap is necessary here. While Vec could store unique elements, it would require O(n) lookups and additional logic to ensure uniqueness. DashMap provides O(1) lookups, built-in uniqueness by key, and thread-safety. The code uses nested DashMaps for efficient product_type → url → Subscriber mapping, which would be cumbersome with Vec.
+3. DashMap vs Singleton Pattern:
+Both are actually being used together. The lazy_static! { static ref SUBSCRIBERS } is implementing the Singleton pattern, while DashMap provides thread-safety. You need both - the Singleton ensures a single global instance, while DashMap handles concurrent access safely. Replacing DashMap would require implementing your own thread-safe collection, which would be reinventing what DashMap already provides efficiently.
 
 #### Reflection Publisher-2
 
