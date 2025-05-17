@@ -51,18 +51,18 @@ You can install Postman via this website: https://www.postman.com/downloads/
 -   [√] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
 -   **STAGE 1: Implement models and repositories**
     -   [√] Commit: `Create Subscriber model struct.`
-    -   [√ ] Commit: `Create Notification model struct.`
+    -   [√] Commit: `Create Notification model struct.`
     -   [√] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
     -   [√] Commit: `Implement add function in Subscriber repository.`
     -   [√] Commit: `Implement list_all function in Subscriber repository.`
     -   [√] Commit: `Implement delete function in Subscriber repository.`
     -   [√] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
-    -   [ ] Commit: `Create Notification service struct skeleton.`
-    -   [ ] Commit: `Implement subscribe function in Notification service.`
-    -   [ ] Commit: `Implement subscribe function in Notification controller.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification service.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification controller.`
+    -   [√] Commit: `Create Notification service struct skeleton.`
+    -   [√] Commit: `Implement subscribe function in Notification service.`
+    -   [√] Commit: `Implement subscribe function in Notification controller.`
+    -   [√] Commit: `Implement unsubscribe function in Notification service.`
+    -   [√] Commit: `Implement unsubscribe function in Notification controller.`
     -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
     -   [ ] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
@@ -86,5 +86,19 @@ DashMap is necessary here. While Vec could store unique elements, it would requi
 Both are actually being used together. The lazy_static! { static ref SUBSCRIBERS } is implementing the Singleton pattern, while DashMap provides thread-safety. You need both - the Singleton ensures a single global instance, while DashMap handles concurrent access safely. Replacing DashMap would require implementing your own thread-safe collection, which would be reinventing what DashMap already provides efficiently.
 
 #### Reflection Publisher-2
+Based on my experience implementing BambangShop's services and controllers, here are my reflections:
+1. Separating Service and Repository from Model:
+The separation follows the Single Responsibility Principle. Models should only represent data structures, while Services handle business logic and Repositories manage data persistence. This separation makes the code more maintainable - we can modify business rules in Services without touching data storage logic in Repositories or data structures in Models. For example, in BambangShop, the NotificationService handles subscription logic while SubscriberRepository handles the actual storage, keeping concerns cleanly separated.
+
+2. Using Only Models:
+Without separation, each Model would need to handle data structure, business logic, and storage. For example, the Subscriber model would need subscription logic, notification sending, and storage management. This creates tight coupling - changes to notification logic could affect storage code. The Program model would need to know about Subscriber internals to notify them, violating encapsulation. The complexity grows exponentially as models interact more, making the code harder to maintain and test.
+
+3. Postman Experience:
+Postman has been invaluable for testing BambangShop's endpoints. Key helpful features:
+- Collections: Organizing related requests (subscribe/unsubscribe) together
+- Environment variables: Storing the base URL to easily switch between local/deployed
+- Request history: Tracking failed attempts while debugging
+- Response validation: Verifying correct status codes and JSON responses
+- Request chaining: Testing subscriber notification flow end-to-end
 
 #### Reflection Publisher-3
