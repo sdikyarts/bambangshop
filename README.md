@@ -23,9 +23,23 @@ As this is an Observer Design Pattern tutorial repository, you need to implement
 This feature will notify creation, promotion, and deletion of a product, to external subscribers that are interested of a certain product type.
 The subscribers are another Rocket instances, so the notification will be sent using HTTP POST request to each subscriber's `receive notification` address.
 
+## API Documentations
+
+You can download the Postman Collection JSON here: https://ristek.link/AdvProgWeek7Postman
+
+After you download the Postman Collection, you can try the endpoints inside "BambangShop Publisher" folder.
+This Postman collection also contains endpoints that you need to implement later on (the `Notification` feature).
+
+Postman is an installable client that you can use to test web endpoints using HTTP request.
+You can also make automated functional testing scripts for REST API projects using this client.
+You can install Postman via this website: https://www.postman.com/downloads/
+
 ## How to Run in Development Environment
 1.  Set up environment variables first by creating `.env` file.
     Here is the example of `.env` file:
+    ```bash
+    APP_INSTANCE_ROOT_URL="http://localhost:8000"
+    ```
     Here are the details of each environment variable:
     | variable              | type   | description                                                |
     |-----------------------|--------|------------------------------------------------------------|
